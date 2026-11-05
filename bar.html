@@ -150,8 +150,10 @@
       datos.forEach(comanda => {
 
         const productosBar = Array.isArray(comanda.productos)
-          ? comanda.productos.filter(p => p.area === "bar")
-          : [];
+  ? comanda.productos.filter(p =>
+     p && String(p.area).toLowerCase().trim() === "bar"
+    )      
+       : [];
 
         // Si esta comanda no tiene productos para Bar, no se muestra
         if (productosBar.length === 0) {
