@@ -150,9 +150,15 @@
         const lista = document.createElement("pre");
 lista.style.whiteSpace = "pre-wrap";
 
-const productosCocina = Array.isArray(comanda.productos)
-  ? comanda.productos.filter(p => p.area === "cocina")
-  : [];
+        const listaProductos = Array.isArray(comanda.productos)
+  ? comanda.productos
+  : (comanda.productos && typeof comanda.productos === "object"
+      ? Object.values(comanda.productos)
+      : []);
+
+const productosCocina = listaProductos.filter(p =>
+  p && String(p.area || "").trim().toLowerCase() === "cocina"
+);
 
 lista.textContent = productosCocina.length > 0
   ? productosCocina.map(p =>
