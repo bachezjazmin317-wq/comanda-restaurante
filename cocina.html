@@ -173,6 +173,7 @@ agregarTexto(tarjeta, "Observaciones", comanda.observaciones);
 agregarTexto(tarjeta, "Total", "$" + (comanda.total ?? "0"));
         
         const estado = document.createElement("p");
+ 
         estado.className = "estado";
         estado.textContent = "Estado: " + (comanda.estado || "nueva");
         tarjeta.appendChild(estado);
