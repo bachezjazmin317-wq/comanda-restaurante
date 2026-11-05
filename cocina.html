@@ -163,7 +163,8 @@ lista.style.whiteSpace = "pre-wrap";
                (p.descripcion || "Sin descripción") +
                " - $" + (p.precio || "0.00");
     }).join("\n");
-} else {
+} 
+        else {
     lista.textContent = "Sin productos";
 }
 productos.appendChild(lista);
