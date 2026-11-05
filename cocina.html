@@ -173,7 +173,6 @@ agregarTexto(tarjeta, "Total", "$" + (comanda.total ?? "0"));
         estado.className = "estado";
         estado.textContent = "Estado: " + (comanda.estado || "nueva");
         tarjeta.appendChild(estado);
-
         const botonPreparar = document.createElement("button");
         botonPreparar.textContent = "PREPARAR";
         botonPreparar.onclick = () =>
