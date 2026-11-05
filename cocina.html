@@ -157,12 +157,15 @@ lista.style.whiteSpace = "pre-wrap";
       ? Object.values(comanda.productos)
       : []);
 
-lista.textContent = listaProductos.length > 0
-  ? listaProductos.map(p =>
-      `${p.cantidad || 0} x ${p.descripcion || "Sin descripción"} - $${p.precio || "0.00"}`
-    ).join("\n")
-  : "Sin productos";
-
+        if (listaProductos.length > 0) {
+    lista.textContent = listaProductos.map(function(p) {
+        return (p.cantidad || 0) + " x " +
+               (p.descripcion || "Sin descripción") +
+               " - $" + (p.precio || "0.00");
+    }).join("\n");
+} else {
+    lista.textContent = "Sin productos";
+}
 productos.appendChild(lista);
 tarjeta.appendChild(productos);
 
