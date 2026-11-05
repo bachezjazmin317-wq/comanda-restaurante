@@ -1,1 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bar - Encanto de Luna</title>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f1ec;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #5b3825;
+    }
+
+    #comandas {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .comanda {
+      background: white;
+      padding: 18px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0002;
+    }
+
+    .comanda h2 {
+      color: #75472c;
+      margin-top: 0;
+    }
+
+    .estado {
+      font-weight: bold;
+      color: #9a5b16;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 8px 5px 0 0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      background: #8b5e3c;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .listo {
+      background: #39764a;
+    }
+
+    .mensaje {
+      text-align: center;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🍹 Bar - Encanto de Luna</h1>
+
+  <div id="comandas">
+    <p class="mensaje">Cargando comandas...</p>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+  <script>
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD69_5u_oqh1ytPz3z37bk9xCkr5zppYTk",
+      authDomain: "encanto-de-luna.firebaseapp.com",
+      projectId: "encanto-de-luna",
+      storageBucket: "encanto-de-luna.firebasestorage.app",
+      messagingSenderId: "729922096306",
+      appId: "1:729922096306:web:fd128a227bb234e2508dab",
+      measurementId: "G-697LP4EJN5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.database();
+    const contenedor = document.getElementById("comandas");
+
+    function agregarTexto(elemento, etiqueta, valor) {
+
+      const p = document.createElement("p");
+
+      p.textContent = etiqueta + ": " +
+        (valor === undefined || valor === null || valor === ""
+          ? "No indicado"
+          : valor);
+
+      elemento.appendChild(p);
+    }
+
+    function cambiarEstado(id, estado) {
+
+      db.ref("comandas/" + id).update({
+        estado: estado
+      })
+
+      .catch(error => {
+        alert("Error al actualizar: " + error.message);
+      });
+    }
+
+    db.ref("comandas").on("value", snapshot => {
+
+      contenedor.replaceChildren();
+
+      if (!snapshot.exists()) {
+
+        const mensaje = document.createElement("p");
+
+        mensaje.className = "mensaje";
+
+        mensaje.textContent = "Todavía no hay comandas.";
+
+        contenedor.appendChild(mensaje);
+
+        return;
+      }
+
+      const datos = [];
+
+      snapshot.forEach(child => {
+
+        datos.push({
+          id: child.key,
+          ...child.val()
+        });
+
+      });
+
+      datos.reverse();
+
+      datos.forEach(comanda => {
+
+        const productosBar = Array.isArray(comanda.productos)
+          ? comanda.productos.filter(p => p.area === "bar")
+          : [];
+
+        // Si esta comanda no tiene productos para Bar, no se muestra
+        if (productosBar.length === 0) {
+          return;
+        }
+
+        const tarjeta = document.createElement("div");
+
+        tarjeta.className = "comanda";
+
+        const titulo = document.createElement("h2");
+
+        titulo.textContent =
+          "Comanda #" + (comanda.numero || "Sin número");
+
+        tarjeta.appendChild(titulo);
+
+        agregarTexto(
+          tarjeta,
+          "Mesa",
+          comanda.mesa
+        );
+
+        agregarTexto(
+          tarjeta,
+          "Mesero",
+          comanda.mesero
+        );
+
+        agregarTexto(
+          tarjeta,
+          "Fecha",
+          comanda.fecha
+        );
+
+        const productos = document.createElement("div");
+
+        const subtitulo = document.createElement("h3");
+
+        subtitulo.textContent = "Bebidas";
+
+        productos.appendChild(subtitulo);
+
+        const lista = document.createElement("pre");
+
+        lista.style.whiteSpace = "pre-wrap";
+
+        lista.textContent = productosBar.map(p =>
+
+          `${p.cantidad} x ${p.descripcion} - $${p.precio}`
+
+        ).join("\n");
+
+        productos.appendChild(lista);
+
+        tarjeta.appendChild(productos);
+
+        agregarTexto(
+          tarjeta,
+          "Observaciones",
+          comanda.observaciones
+        );
+
+        const estado = document.createElement("p");
+
+        estado.className = "estado";
+
+        estado.textContent =
+          "Estado: " + (comanda.estado || "nueva");
+
+        tarjeta.appendChild(estado);
+
+        const botonPreparar = document.createElement("button");
+
+        botonPreparar.textContent = "PREPARAR";
+
+        botonPreparar.onclick = () =>
+
+          cambiarEstado(
+            comanda.id,
+            "preparando"
+          );
+
+        tarjeta.appendChild(botonPreparar);
+
+        const botonListo = document.createElement("button");
+
+        botonListo.className = "listo";
+
+        botonListo.textContent = "LISTO";
+
+        botonListo.onclick = () =>
+
+          cambiarEstado(
+            comanda.id,
+            "lista"
+          );
+
+        tarjeta.appendChild(botonListo);
+
+        contenedor.appendChild(tarjeta);
+
+      });
+
+    }, error => {
+
+      contenedor.textContent =
+        "Error al cargar comandas: " + error.message;
+
+    });
+
+    console.log("Panel de Bar conectado a Firebase");
+
+  </script>
+
+</body>
+</html>
