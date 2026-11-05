@@ -306,6 +306,26 @@ function enviarComanda() {
 }
 
 </script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD69_5u_oqh1ytPz3z37bk9xCkr5zppYTk",
+    authDomain: "encanto-de-luna.firebaseapp.com",
+    projectId: "encanto-de-luna",
+    storageBucket: "encanto-de-luna.firebasestorage.app",
+    messagingSenderId: "729922096306",
+    appId: "1:729922096306:web:fd128a227bb234e2508dab",
+    measurementId: "G-697LP4EJN5"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const db = firebase.database();
+
+  console.log("Firebase conectado correctamente");
+</script>
 </body>
 </html>
