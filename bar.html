@@ -162,6 +162,10 @@ const productosBar = listaProductos.filter(p =>
         // Si esta comanda no tiene productos para Bar, no se muestra
         if (productosBar.length === 0) {
           return;
+
+          console.log("Productos encontrados para Bar:", listaProductos);
+console.log("Productos filtrados para Bar:", productosBar);
+          
         }
 
         const tarjeta = document.createElement("div");
