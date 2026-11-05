@@ -293,7 +293,54 @@ function calcularTotal() {
 }
 
 function enviarComanda() {
+    const numero = document.getElementById("numero").value;
+    const mesa = document.getElementById("mesa").value;
+    const fecha = document.getElementById("fecha").value;
+    const mesero = document.getElementById("mesero").value;
+    const observaciones = document.getElementById("observaciones").value;
 
+    const filas = document.querySelectorAll("#tablaAlimentos tbody tr");
+    const productos = [];
+
+    filas.forEach(fila => {
+        const cantidad = fila.querySelector(".cantidad").value;
+        const descripcion = fila.querySelector(".descripcion").value;
+        const precio = fila.querySelector(".precio").value;
+        const total = fila.querySelector(".total").textContent;
+
+        if (descripcion.trim() !== "") {
+            productos.push({
+                cantidad: cantidad,
+                descripcion: descripcion,
+                precio: precio,
+                total: total
+            });
+        }
+    });
+
+    const totalComanda = productos.reduce(
+        (suma, producto) => suma + parseFloat(producto.total || 0),
+        0
+    );
+
+    db.ref("comandas").push({
+        numero: numero,
+        mesa: mesa,
+        fecha: fecha,
+        mesero: mesero,
+        productos: productos,
+        observaciones: observaciones,
+        total: totalComanda,
+        estado: "nueva",
+        creada: firebase.database.ServerValue.TIMESTAMP
+    })
+    .then(() => {
+        alert("✅ Comanda enviada correctamente a Cocina");
+    })
+    .catch((error) => {
+        alert("❌ Error al enviar la comanda: " + error.message);
+    });
+}
   const mesa = document.getElementById("mesa").value;
 
   if (mesa === "") {
