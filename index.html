@@ -320,32 +320,31 @@ function enviarComanda() {
     const mesero = document.getElementById("mesero").value;
     const observaciones = document.getElementById("observaciones").value;
 
-   const filas = document.querySelectorAll("#productos .producto");
+    const filas = document.querySelectorAll("#productos .producto");
     const productos = [];
 
-    filas.forEach(fila => {
-        filas.forEach(fila => {
-    const cantidad = fila.querySelector(".cantidad").value;
-    const descripcion = fila.querySelector(".descripcion").value;
-    const precio = fila.querySelector(".precio").value;
-    const total = fila.querySelector(".total").textContent;
-    const area = fila.querySelector(".area").value;
-      
-    if (descripcion.trim() !== "") {
-        productos.push({
-           cantidad: cantidad,
-           descripcion: descripcion,
-           precio: precio,
-           total: total,
-            area: area   
+    filas.forEach(function(fila) {
+        const cantidad = fila.querySelector(".cantidad").value;
+        const descripcion = fila.querySelector(".descripcion").value;
+        const precio = fila.querySelector(".precio").value;
+        const area = fila.querySelector(".area").value;
+
+        if (descripcion.trim() !== "") {
+            const total = Number(cantidad || 0) * Number(precio || 0);
+
+            productos.push({
+                cantidad: cantidad,
+                descripcion: descripcion,
+                precio: precio,
+                total: total.toFixed(2),
+                area: area
             });
         }
     });
 
-    const totalComanda = productos.reduce(
-        (suma, producto) => suma + parseFloat(producto.total || 0),
-        0
-    );
+    const totalComanda = productos.reduce(function(suma, producto) {
+        return suma + Number(producto.total || 0);
+    }, 0);
 
     db.ref("comandas").push({
         numero: numero,
@@ -354,16 +353,17 @@ function enviarComanda() {
         mesero: mesero,
         productos: productos,
         observaciones: observaciones,
-        total: totalComanda,
+        total: totalComanda.toFixed(2),
         estado: "nueva",
         creada: firebase.database.ServerValue.TIMESTAMP
     })
-    .then(() => {
+    .then(function() {
         alert("✅ Comanda enviada correctamente a Cocina");
     })
-    .catch((error) => {
+    .catch(function(error) {
         alert("❌ Error al enviar la comanda: " + error.message);
     });
+}
 
 }
 
