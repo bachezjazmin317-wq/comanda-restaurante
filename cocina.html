@@ -156,6 +156,20 @@ lista.style.whiteSpace = "pre-wrap";
       ? Object.values(comanda.productos)
       : []);
 
+        const productosCocina = listaProductos;
+
+lista.textContent = productosCocina.length > 0
+  ? productosCocina.map(p =>
+      `${p.cantidad || 0} x ${p.descripcion || "Sin descripción"} - $${p.precio || "0.00"}`
+    ).join("\n")
+  : "Sin productos";
+
+productos.appendChild(lista);
+tarjeta.appendChild(productos);
+
+agregarTexto(tarjeta, "Observaciones", comanda.observaciones);
+agregarTexto(tarjeta, "Total", "$" + (comanda.total ?? "0"));
+
 const productosCocina = listaProductos.filter(p =>
   p && String(p.area || "").trim().toLowerCase() === "cocina"
 );
