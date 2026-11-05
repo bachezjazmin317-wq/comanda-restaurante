@@ -252,6 +252,19 @@ function agregarProducto() {
     </div>
 
     <div>
+    <div>
+  <input type="number" class="precio"
+  step="0.01" placeholder="0.00">
+</div>
+
+<div>
+  <select class="area">
+    <option value="cocina">Cocina</option>
+    <option value="bar">Bar</option>
+  </select>
+</div>
+
+<div>
       <button class="eliminar"
       onclick="eliminarProducto(this)">
       Eliminar
@@ -307,24 +320,24 @@ function enviarComanda() {
     const mesero = document.getElementById("mesero").value;
     const observaciones = document.getElementById("observaciones").value;
 
-    const filas = document.querySelectorAll("#tablaAlimentos tbody tr");
+   const filas = document.querySelectorAll("#productos .producto");
     const productos = [];
 
     filas.forEach(fila => {
-        const cantidad = fila.querySelector(".cantidad").value;
-        const descripcion = fila.querySelector(".descripcion").value;
-        const precio = fila.querySelector(".precio").value;
-        const total = fila.querySelector(".total").textContent;
-        const area = fila.querySelector(".area").value;
+        filas.forEach(fila => {
+    const cantidad = fila.querySelector(".cantidad").value;
+    const descripcion = fila.querySelector(".descripcion").value;
+    const precio = fila.querySelector(".precio").value;
+    const total = fila.querySelector(".total").textContent;
+    const area = fila.querySelector(".area").value;
       
-        if (descripcion.trim() !== "") {
-            productos.push({
+    if (descripcion.trim() !== "") {
+        productos.push({
            cantidad: cantidad,
            descripcion: descripcion,
-            precio: precio,
+           precio: precio,
            total: total,
-            area: area  
-              
+            area: area   
             });
         }
     });
