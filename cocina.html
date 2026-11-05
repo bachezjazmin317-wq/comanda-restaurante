@@ -91,7 +91,8 @@
 
     const db = firebase.database();
     const contenedor = document.getElementById("comandas");
-
+    console.log("Cocina: intentando conectar con Firebase");
+    
     function agregarTexto(elemento, etiqueta, valor) {
       const p = document.createElement("p");
       p.textContent = etiqueta + ": " +
@@ -158,8 +159,8 @@ lista.style.whiteSpace = "pre-wrap";
 
         const productosCocina = listaProductos;
 
-lista.textContent = productosCocina.length > 0
-  ? productosCocina.map(p =>
+lista.textContent = listaProductos.length > 0
+  ? listaProductos.map(p =>
       `${p.cantidad || 0} x ${p.descripcion || "Sin descripción"} - $${p.precio || "0.00"}`
     ).join("\n")
   : "Sin productos";
@@ -169,23 +170,7 @@ tarjeta.appendChild(productos);
 
 agregarTexto(tarjeta, "Observaciones", comanda.observaciones);
 agregarTexto(tarjeta, "Total", "$" + (comanda.total ?? "0"));
-
-const productosCocina = listaProductos.filter(p =>
-  p && String(p.area || "").trim().toLowerCase() === "cocina"
-);
-
-lista.textContent = productosCocina.length > 0
-  ? productosCocina.map(p =>
-      `${p.cantidad} x ${p.descripcion} - $${p.precio}`
-    ).join("\n")
-  : "Sin productos de cocina";
-
-        productos.appendChild(lista);
-        tarjeta.appendChild(productos);
-
-        agregarTexto(tarjeta, "Observaciones", comanda.observaciones);
-        agregarTexto(tarjeta, "Total", "$" + (comanda.total ?? "0"));
-
+        
         const estado = document.createElement("p");
         estado.className = "estado";
         estado.textContent = "Estado: " + (comanda.estado || "nueva");
