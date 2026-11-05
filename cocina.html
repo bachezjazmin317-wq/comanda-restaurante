@@ -157,8 +157,6 @@ lista.style.whiteSpace = "pre-wrap";
       ? Object.values(comanda.productos)
       : []);
 
-        const productosCocina = listaProductos;
-
 lista.textContent = listaProductos.length > 0
   ? listaProductos.map(p =>
       `${p.cantidad || 0} x ${p.descripcion || "Sin descripción"} - $${p.precio || "0.00"}`
