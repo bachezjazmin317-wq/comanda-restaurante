@@ -315,13 +315,16 @@ function enviarComanda() {
         const descripcion = fila.querySelector(".descripcion").value;
         const precio = fila.querySelector(".precio").value;
         const total = fila.querySelector(".total").textContent;
-
+        const area = fila.querySelector(".area").value;
+      
         if (descripcion.trim() !== "") {
             productos.push({
-                cantidad: cantidad,
-                descripcion: descripcion,
-                precio: precio,
-                total: total
+           cantidad: cantidad,
+           descripcion: descripcion,
+            precio: precio,
+           total: total,
+            area: area  
+              
             });
         }
     });
